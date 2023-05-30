@@ -1,7 +1,7 @@
 import { AxiosResponse } from "axios";
 import { apiRoutes } from "core/routes/routes";
-import { publicInstance } from "lib/config/axios.config";
-import { ILogin } from "models/auth";
+import { authInstance, publicInstance } from "lib/config/axios.config";
+import { ILogin, IProfile } from "models/auth";
 
 class AuthService {
   async login(body: {
@@ -11,7 +11,6 @@ class AuthService {
     return new Promise(async (resolve, reject) => {
       try {
         const res = await publicInstance.post(apiRoutes.SIGN_IN, body);
-        console.log(res as AxiosResponse<ILogin>);
         resolve(res);
       } catch (err) {
         reject(err);
@@ -33,6 +32,17 @@ class AuthService {
         resolve(res);
       } catch (err) {
         reject(err);
+      }
+    });
+  }
+
+  async getProfile(): Promise<AxiosResponse<{ data: IProfile }>> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const res = await authInstance.get(apiRoutes.PROFILE);
+        resolve(res);
+      } catch (error) {
+        reject(error);
       }
     });
   }

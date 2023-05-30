@@ -1,11 +1,16 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { AuthState } from "models/auth";
+import { AuthState, IProfile } from "models/auth";
 import { tokenKey, ExpirySession } from "lib/utils";
 
 const initialState: AuthState = {
   isLoggedIn: !!ExpirySession.get(tokenKey),
   loading: false,
-  error: ""
+  error: "",
+  profile: {
+    data: null,
+    error: "",
+    loading: false,
+  },
 };
 
 export const AuthSlice = createSlice({
@@ -27,8 +32,21 @@ export const AuthSlice = createSlice({
     },
     logOut: (state: AuthState) => {
       state.isLoggedIn = false;
-    }
-  }
+    },
+    getProfileBegin: (state: AuthState) => {
+      state.profile.loading = true;
+      state.profile.error = "";
+    },
+    getProfileSuccess: (state: AuthState, action: PayloadAction<IProfile>) => {
+      state.profile.loading = false;
+      state.profile.data = action.payload;
+      state.profile.error = "";
+    },
+    getProfileError: (state: AuthState, action: PayloadAction<string>) => {
+      state.profile.loading = false;
+      state.profile.error = action.payload;
+    },
+  },
 });
 
 export const actions = AuthSlice.actions;

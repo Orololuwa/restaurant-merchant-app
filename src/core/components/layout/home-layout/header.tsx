@@ -75,7 +75,7 @@ export default function HeaderNav() {
   const { logoutHandler } = useLogout();
 
   return (
-    <Box bg={useColorModeValue("orange.200", "orange.900")} px={4}>
+    <Box bg={useColorModeValue("orange.300", "orange.900")} px={4}>
       <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
         <IconButton
           size={"md"}

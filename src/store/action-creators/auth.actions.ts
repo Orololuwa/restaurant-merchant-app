@@ -73,3 +73,18 @@ export const logOut = (navigate: NavigateFunction) => {
     }
   };
 };
+
+export const getProfile = () => {
+  return async (dispatch: Dispatch) => {
+    try {
+      dispatch(actions.getProfileBegin());
+
+      const res = await authService.getProfile();
+      dispatch(actions.getProfileSuccess(res.data.data));
+    } catch (err) {
+      const axiosError = err as AxiosError<{ message: string }>;
+      const msg = axiosError.response?.data?.message;
+      dispatch(actions.getProfileError(msg || "Error"));
+    }
+  };
+};

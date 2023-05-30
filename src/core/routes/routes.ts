@@ -5,9 +5,11 @@ export const appRoutes = {
   USERS: "/users",
   SIGN_IN: "/auth/signin",
   SIGN_UP: "/auth/signup",
+  RESTAURANT_SETUP: "/restaurant/setup",
 };
 
 export const apiRoutes = {
   SIGN_IN: "/auth/signin",
   SIGN_UP: "/auth/register",
+  PROFILE: "profile",
 };
