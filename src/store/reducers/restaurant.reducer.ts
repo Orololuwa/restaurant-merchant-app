@@ -7,6 +7,11 @@ const initialState: IRestaurantState = {
     error: "",
     loading: false,
   },
+  restaurant: {
+    data: null,
+    error: "",
+    loading: false,
+  },
 };
 
 export const RestaurantSlice = createSlice({
@@ -25,6 +30,19 @@ export const RestaurantSlice = createSlice({
     getRestaurantError: (state, action: PayloadAction<string>) => {
       state.restaurants.loading = false;
       state.restaurants.error = action.payload;
+    },
+    getARestaurantBegin: (state) => {
+      state.restaurant.loading = true;
+      state.restaurant.error = "";
+    },
+    getARestaurantSuccess: (state, action: PayloadAction<IRestaurant>) => {
+      state.restaurant.loading = false;
+      state.restaurant.data = action.payload;
+      state.restaurant.error = "";
+    },
+    getARestaurantError: (state, action: PayloadAction<string>) => {
+      state.restaurant.loading = false;
+      state.restaurant.error = action.payload;
     },
   },
 });

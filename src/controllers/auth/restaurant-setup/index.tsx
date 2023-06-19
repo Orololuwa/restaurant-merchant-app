@@ -19,41 +19,7 @@ import {
 } from "@chakra-ui/react";
 
 import { useToast } from "@chakra-ui/react";
-import Upload from "core/components/upload/upload";
-
-const Form1 = () => {
-  return (
-    <>
-      <Heading w="100%" textAlign={"center"} fontWeight="normal" mb="2%">
-        User Registration
-      </Heading>
-      <FormControl mt="2%">
-        <FormLabel htmlFor="name" fontWeight={"normal"}>
-          Restaurant Name
-        </FormLabel>
-        <Input id="name" type="text" />
-      </FormControl>
-
-      <FormControl mt="2%">
-        <FormLabel htmlFor="email" fontWeight={"normal"}>
-          Email address
-        </FormLabel>
-        <Input id="email" type="email" />
-      </FormControl>
-
-      <FormControl mt="2%">
-        <FormLabel htmlFor="description" fontWeight={"normal"}>
-          Description
-        </FormLabel>
-        <Textarea id="description" />
-      </FormControl>
-
-      <Box py="5">
-        <Upload uploadKey={"test"} title="Logo" />
-      </Box>
-    </>
-  );
-};
+import RestaurantDetails from "./restaurant-details";
 
 const Form2 = () => {
   return (
@@ -268,7 +234,7 @@ const RestaurantSetup = () => {
   const toast = useToast();
   const [step, setStep] = useState(1);
 
-  const stepComponents = [<Form1 />, <Form2 />, <Form3 />];
+  const stepComponents = [<RestaurantDetails />, <Form2 />, <Form3 />];
 
   const [progress, setProgress] = useState(
     (100 / stepComponents.length) * step

@@ -2,6 +2,7 @@ import { IBaseStoreState } from "./base";
 
 export interface IRestaurantState {
   restaurants: IBaseStoreState<IRestaurant[]>;
+  restaurant: IBaseStoreState<Partial<IRestaurant> | null>;
 }
 
 export interface IRestaurant {

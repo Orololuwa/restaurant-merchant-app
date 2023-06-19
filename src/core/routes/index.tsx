@@ -5,7 +5,7 @@ import { appRoutes } from "./routes";
 
 import DashboardLayout from "core/components/layout/dashboard-layout";
 import SetupCompleteGuard from "core/guards/setup-complete.guard";
-import RestaurantSetup from "controllers/auth/restaurant.setup";
+import RestaurantSetup from "controllers/auth/restaurant-setup";
 import IsRestaurantCreatedGuard from "core/guards/is-restaurant-created.guard";
 const Dashboard = lazy(
   () => import("controllers/dashboard/dashboard.controller")

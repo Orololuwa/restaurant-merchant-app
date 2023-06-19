@@ -17,3 +17,18 @@ export const getRestaurants = () => {
     }
   };
 };
+
+export const getARestaurant = (id: number) => {
+  return async (dispatch: Dispatch) => {
+    try {
+      dispatch(actions.getARestaurantBegin());
+
+      const res = await restaurantsService.getARestaurant(id);
+      dispatch(actions.getARestaurantSuccess(res.data));
+    } catch (err) {
+      const axiosError = err as AxiosError<{ message: string }>;
+      const msg = axiosError.response?.data?.message;
+      dispatch(actions.getARestaurantError(msg || "Error"));
+    }
+  };
+};

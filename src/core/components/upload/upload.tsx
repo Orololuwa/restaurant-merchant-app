@@ -11,40 +11,34 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-// import { useAppDispatch, useAppSelector } from "core/hooks/use-redux";
-// import settingsService from "data/services/settings.service";
-// import { uploadBusinessDocumentsV2 } from "data/store";
 import { ExportCurve } from "iconsax-react";
 import React, { useState } from "react";
 import cloudUploadService from "services/cloud-upload.service";
 
 interface IUpload {
   uploadKey: string;
-  //   id: number;
-  //   callSign: string;
+  initialImage: string;
+  onCurrentImageChange: (image: string) => void;
   title: string;
 }
 
 const Upload = ({
   uploadKey,
-  //  id, callSign,
   title,
+  initialImage,
+  onCurrentImageChange,
 }: IUpload) => {
-  //   const _dispatch = useAppDispatch();
   const [isLoading, setLoading] = useState(false);
   const [inputKey, setInputKey] = useState(0);
 
-  //   const [loadingUpload] = useAppSelector((state) => [
-  //     state.settings.UserAvatarUpload.loading,
-  //   ]);
-
-  const preset_key = "orololuwa";
-  const cloud_name = "df1fw15ei";
-  const [image, setImage] = useState("");
+  const preset_key = process.env.REACT_APP_CLOUDINERY_PRESET_KEY as string;
+  const cloud_name = process.env.REACT_APP_CLOUDINERY_CLOUD_NAME as string;
 
   const handleFileChange = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
+    if (!preset_key && !cloud_name) return;
+
     setLoading(true);
     const files = event?.target.files;
 
@@ -56,14 +50,12 @@ const Upload = ({
     formData.append("file", file);
     formData.append("upload_preset", preset_key);
 
-    // return console.log(file);
-
     try {
       const response = await cloudUploadService.cloudineryUpload(
         cloud_name,
         formData
       );
-      setImage(response.secure_url);
+      onCurrentImageChange(response.secure_url);
       setLoading(false);
     } catch (error) {
       console.log(error);
@@ -76,7 +68,7 @@ const Upload = ({
 
   return (
     <Flex alignItems={"flex-start"} gap={"5"}>
-      <Avatar src={image} size={"2xl"} />
+      <Avatar src={initialImage} size={"2xl"} />
       <Stack flexGrow={"1"}>
         <Box flexBasis="60%">
           <Center w="full" h="full">
