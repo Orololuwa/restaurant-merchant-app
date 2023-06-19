@@ -5,8 +5,8 @@ import { appRoutes } from "core/routes/routes";
 import { useEffect } from "react";
 import { Navigate } from "react-router-dom";
 
-const SetupCompleteGuard = ({ children }: { children: JSX.Element }) => {
-  const data = useAppSelector((state) => state.auth.profile);
+const IsRestaurantCreatedGuard = ({ children }: { children: JSX.Element }) => {
+  const data = useAppSelector((state) => state.restaurant.restaurants);
   const toast = useToast();
 
   useEffect(() => {
@@ -18,15 +18,17 @@ const SetupCompleteGuard = ({ children }: { children: JSX.Element }) => {
       });
   }, [data.error]);
 
-  const setupComplete = data.data?.setupComplete;
+  const isRestaurantCreated = data.data.length;
 
   if (data.loading) return <Loading />;
 
-  if (!setupComplete) {
-    return <Navigate to={appRoutes.RESTAURANT_SETUP} />;
+  console.log(isRestaurantCreated, !!isRestaurantCreated);
+
+  if (!isRestaurantCreated) {
+    return <Navigate to={appRoutes.RESTAURANT_CHOOSE} />;
   }
 
   return children;
 };
 
-export default SetupCompleteGuard;
+export default IsRestaurantCreatedGuard;

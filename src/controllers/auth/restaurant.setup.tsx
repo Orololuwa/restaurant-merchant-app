@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Progress,
   Box,
@@ -16,59 +16,41 @@ import {
   InputGroup,
   Textarea,
   FormHelperText,
-  InputRightElement,
 } from "@chakra-ui/react";
 
 import { useToast } from "@chakra-ui/react";
+import Upload from "core/components/upload/upload";
 
 const Form1 = () => {
-  const [show, setShow] = React.useState(false);
-  const handleClick = () => setShow(!show);
   return (
     <>
       <Heading w="100%" textAlign={"center"} fontWeight="normal" mb="2%">
         User Registration
       </Heading>
-      <Flex>
-        <FormControl mr="5%">
-          <FormLabel htmlFor="first-name" fontWeight={"normal"}>
-            First name
-          </FormLabel>
-          <Input id="first-name" placeholder="First name" />
-        </FormControl>
+      <FormControl mt="2%">
+        <FormLabel htmlFor="name" fontWeight={"normal"}>
+          Restaurant Name
+        </FormLabel>
+        <Input id="name" type="text" />
+      </FormControl>
 
-        <FormControl>
-          <FormLabel htmlFor="last-name" fontWeight={"normal"}>
-            Last name
-          </FormLabel>
-          <Input id="last-name" placeholder="First name" />
-        </FormControl>
-      </Flex>
       <FormControl mt="2%">
         <FormLabel htmlFor="email" fontWeight={"normal"}>
           Email address
         </FormLabel>
         <Input id="email" type="email" />
-        <FormHelperText>We'll never share your email.</FormHelperText>
       </FormControl>
 
-      <FormControl>
-        <FormLabel htmlFor="password" fontWeight={"normal"} mt="2%">
-          Password
+      <FormControl mt="2%">
+        <FormLabel htmlFor="description" fontWeight={"normal"}>
+          Description
         </FormLabel>
-        <InputGroup size="md">
-          <Input
-            pr="4.5rem"
-            type={show ? "text" : "password"}
-            placeholder="Enter password"
-          />
-          <InputRightElement width="4.5rem">
-            <Button h="1.75rem" size="sm" onClick={handleClick}>
-              {show ? "Hide" : "Show"}
-            </Button>
-          </InputRightElement>
-        </InputGroup>
+        <Textarea id="description" />
       </FormControl>
+
+      <Box py="5">
+        <Upload uploadKey={"test"} title="Logo" />
+      </Box>
     </>
   );
 };
@@ -336,27 +318,17 @@ const RestaurantSetup = () => {
         ></Progress>
         {stepComponents[step - 1]}
         <ButtonGroup mt="5%" w="100%" colorScheme="orange">
-          <Flex w="100%" justifyContent="space-between">
-            <Flex>
-              <Button
-                onClick={previous}
-                isDisabled={step === 1}
-                variant="solid"
-                w="7rem"
-                mr="5%"
-              >
-                Back
-              </Button>
-              <Button
-                w="7rem"
-                isDisabled={step === stepComponents.length}
-                onClick={next}
-                variant="outline"
-              >
-                Next
-              </Button>
-            </Flex>
-            {step === 3 ? (
+          <Flex w="100%" justifyContent="flex-end">
+            <Button
+              onClick={previous}
+              isDisabled={step === 1}
+              variant="solid"
+              w="7rem"
+              mr="5%"
+            >
+              Back
+            </Button>
+            {step === stepComponents.length ? (
               <Button
                 w="7rem"
                 colorScheme="green"
@@ -373,7 +345,16 @@ const RestaurantSetup = () => {
               >
                 Submit
               </Button>
-            ) : null}
+            ) : (
+              <Button
+                w="7rem"
+                isDisabled={step === stepComponents.length}
+                onClick={next}
+                variant="outline"
+              >
+                Next
+              </Button>
+            )}
           </Flex>
         </ButtonGroup>
       </Box>

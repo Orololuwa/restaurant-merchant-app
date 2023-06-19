@@ -6,6 +6,7 @@ import { appRoutes } from "./routes";
 import DashboardLayout from "core/components/layout/dashboard-layout";
 import SetupCompleteGuard from "core/guards/setup-complete.guard";
 import RestaurantSetup from "controllers/auth/restaurant.setup";
+import IsRestaurantCreatedGuard from "core/guards/is-restaurant-created.guard";
 const Dashboard = lazy(
   () => import("controllers/dashboard/dashboard.controller")
 );
@@ -16,9 +17,11 @@ const routes: RouteObject[] = [
   {
     element: (
       <AuthGuard>
-        <SetupCompleteGuard>
-          <DashboardLayout />
-        </SetupCompleteGuard>
+        <IsRestaurantCreatedGuard>
+          <SetupCompleteGuard>
+            <DashboardLayout />
+          </SetupCompleteGuard>
+        </IsRestaurantCreatedGuard>
       </AuthGuard>
     ),
     children: [
@@ -33,7 +36,11 @@ const routes: RouteObject[] = [
     ],
   },
   {
-    element: <DashboardLayout />,
+    element: (
+      <AuthGuard>
+        <DashboardLayout />
+      </AuthGuard>
+    ),
     path: appRoutes.RESTAURANT_SETUP,
     children: [
       {
