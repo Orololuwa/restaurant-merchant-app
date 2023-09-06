@@ -11,6 +11,7 @@ import {
   Text,
   useColorModeValue,
   Link as ChakraLink,
+  Icon,
 } from "@chakra-ui/react";
 import { useAppDispatch, useAppSelector } from "core/hooks/use-redux";
 import { AuthLocationState } from "models/auth";
@@ -20,6 +21,7 @@ import { loginJWT } from "store/action-creators/auth.actions";
 import { ErrorToast } from "core/components/error";
 import { isFieldsInvalid } from "lib/utils";
 import { appRoutes } from "core/routes/routes";
+import { FingerScan } from "iconsax-react";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -94,24 +96,37 @@ export default function LoginPage() {
                   <ChakraLink
                     as={Link}
                     to={appRoutes.SIGN_UP}
-                    color={"orange.400"}
-                    colorScheme="orange"
+                    color={"gray.700"}
+                    colorScheme="gray"
                   >
                     Create an account
                   </ChakraLink>
                 </Stack>
-                <Button
-                  bg={"orange.400"}
-                  color={"white"}
-                  _hover={{
-                    bg: "orange.500",
-                  }}
-                  onClick={onLogin}
-                  isLoading={loading}
-                  isDisabled={isDisabled()}
-                >
-                  Sign in
-                </Button>
+                <Flex justifyContent={"space-between"} gap="2">
+                  <Button
+                    bg={"gray.700"}
+                    color={"white"}
+                    _hover={{
+                      bg: "gray.500",
+                    }}
+                    onClick={onLogin}
+                    isLoading={loading}
+                    isDisabled={isDisabled()}
+                    flexGrow={"1"}
+                  >
+                    Sign in
+                  </Button>
+                  <Button
+                    bg={"gray.700"}
+                    color={"white"}
+                    _hover={{
+                      bg: "gray.500",
+                    }}
+                    flexBasis={"3rem"}
+                  >
+                    <Icon as={FingerScan} boxSize={"6"} />
+                  </Button>
+                </Flex>
               </Stack>
             </Stack>
           </Box>

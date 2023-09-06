@@ -52,6 +52,7 @@ const NavLink = ({ children, to }: { children: ReactNode; to: string }) => {
       px={2}
       py={1}
       rounded={"md"}
+      color={"whiteAlpha.900"}
       _hover={{
         textDecoration: "none",
         bg: useColorModeValue("gray.200", "gray.700"),
@@ -75,7 +76,7 @@ export default function HeaderNav() {
   const { logoutHandler } = useLogout();
 
   return (
-    <Box bg={useColorModeValue("orange.300", "orange.900")} px={4}>
+    <Box bg={useColorModeValue("gray.900", "gray.900")} px={4}>
       <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
         <IconButton
           size={"md"}

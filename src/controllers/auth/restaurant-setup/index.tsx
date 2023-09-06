@@ -280,10 +280,10 @@ const RestaurantSetup = () => {
           mb="5%"
           mx="5%"
           isAnimated
-          colorScheme="orange"
+          colorScheme="gray"
         ></Progress>
         {stepComponents[step - 1]}
-        <ButtonGroup mt="5%" w="100%" colorScheme="orange">
+        <ButtonGroup mt="5%" w="100%" colorScheme="gray">
           <Flex w="100%" justifyContent="flex-end">
             <Button
               onClick={previous}

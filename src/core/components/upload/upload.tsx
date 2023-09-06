@@ -108,7 +108,7 @@ const Upload = ({
                     bottom="0"
                     left="0"
                     hasStripe
-                    colorScheme={"orange"}
+                    colorScheme={"gray"}
                   />
                 ) : null
               }

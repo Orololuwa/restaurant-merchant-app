@@ -22,6 +22,8 @@ const SetupCompleteGuard = ({ children }: { children: JSX.Element }) => {
 
   if (data.loading) return <Loading />;
 
+  console.log("@setup_complete", { setupComplete });
+
   if (!setupComplete) {
     return <Navigate to={appRoutes.RESTAURANT_SETUP} />;
   }

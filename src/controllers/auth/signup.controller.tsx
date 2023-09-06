@@ -211,10 +211,10 @@ export default function SignupCard() {
               <Button
                 loadingText="Submitting"
                 size="lg"
-                bg={"orange.400"}
+                bg={"gray.700"}
                 color={"white"}
                 _hover={{
-                  bg: "orange.500",
+                  bg: "gray.500",
                 }}
                 isLoading={loading}
                 onClick={onSignUp}
@@ -226,11 +226,7 @@ export default function SignupCard() {
             <Stack pt={6}>
               <Text align={"center"}>
                 Already a user?{" "}
-                <ChakraLink
-                  as={Link}
-                  to={appRoutes.SIGN_IN}
-                  color={"orange.400"}
-                >
+                <ChakraLink as={Link} to={appRoutes.SIGN_IN} color={"gray.700"}>
                   Login
                 </ChakraLink>
               </Text>
