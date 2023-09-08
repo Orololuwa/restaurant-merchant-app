@@ -4,7 +4,7 @@ import { tokenKey, ExpirySession } from "../utils";
 import { baseURL } from "./app.config";
 
 export const authInstance = axios.create({
-  baseURL
+  baseURL,
 });
 
 export const authHeader = async (
@@ -13,7 +13,7 @@ export const authHeader = async (
   const accessToken = await ExpirySession.get(tokenKey);
   return {
     ...headers,
-    Authorization: accessToken
+    Authorization: accessToken,
   };
 };
 
@@ -48,5 +48,5 @@ authInstance.interceptors.response.use(
 );
 
 export const publicInstance = axios.create({
-  baseURL
+  baseURL,
 });

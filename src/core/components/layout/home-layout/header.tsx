@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import {
   Box,
   Flex,
@@ -17,15 +17,24 @@ import {
   Text,
   Icon,
   Image,
+  useToast,
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { ColorModeSwitcher } from "core/components/color-mode-switcher";
 import { Link, useMatch, useNavigate, useResolvedPath } from "react-router-dom";
 import { appRoutes } from "core/routes/routes";
-import { LoginCurve, Logout } from "iconsax-react";
+import { FingerScan, LoginCurve, Logout } from "iconsax-react";
 import { useLogout } from "core/hooks/use-logout";
 import logo from "assets/logo.png";
 import { useAppSelector } from "core/hooks/use-redux";
+import authService from "services/auth.service";
+import { decode } from "base64-arraybuffer";
+import {
+  MaybeCredential,
+  decodeAssertion,
+  encodeAssertResponse,
+  encodeAttestationResponse,
+} from "lib/helpers/web-auth-n.helper";
 
 const Links = [
   {
@@ -66,6 +75,11 @@ const NavLink = ({ children, to }: { children: ReactNode; to: string }) => {
   );
 };
 
+export type UserWebauthn = {
+  publicKey: string;
+  credentialId: string;
+};
+
 export default function HeaderNav() {
   const [isLoggedIn] = useAppSelector((state) => [state.auth.isLoggedIn]);
 
@@ -74,6 +88,107 @@ export default function HeaderNav() {
   const navigate = useNavigate();
 
   const { logoutHandler } = useLogout();
+
+  const toast = useToast();
+
+  //web-auth-n setup or flow
+
+  const [processing, setProcessing] = useState(false);
+
+  const [residentCredentials, setResidentCredentials] =
+    useState<boolean>(false);
+
+  const [failed, setFailed] = useState(false);
+
+  const fetchCredentials = async () => {
+    try {
+      const { isWebAuthEnabled } = (await authService.getWebAuthStatus()).data
+        .data;
+      setResidentCredentials(isWebAuthEnabled);
+    } catch (error) {
+      toast({
+        status: "error",
+        title: "Error",
+        description: "Failed to get Resident keys",
+        position: "top",
+      });
+      setResidentCredentials(false);
+    }
+  };
+
+  const setUp = async () => {
+    setProcessing(true);
+    try {
+      const attestation = (await authService.attestateBegin()).data.data;
+      attestation.challenge = decode(
+        attestation.challenge as unknown as string
+      );
+      attestation.user.id = decode(attestation.user.id as unknown as string);
+
+      const credential: MaybeCredential = await navigator.credentials.create({
+        publicKey: attestation,
+      });
+      if (!credential) return setFailed(true);
+
+      await authService.attestateEnd(
+        encodeAttestationResponse(credential as PublicKeyCredential)
+      );
+      await fetchCredentials();
+      setProcessing(false);
+    } catch (error) {
+      setFailed(true);
+      setProcessing(false);
+    }
+  };
+
+  const remove = async () => {
+    setProcessing(true);
+    try {
+      const rawAssertion = (await authService.assertBegin()).data.data;
+      const assertion = decodeAssertion(rawAssertion);
+
+      const credential: MaybeCredential = await navigator.credentials.get({
+        publicKey: assertion,
+      });
+
+      if (!credential) return setFailed(true);
+
+      await authService.assertEndRemove({
+        challenge: rawAssertion.challenge,
+        ...encodeAssertResponse(credential as PublicKeyCredential),
+      });
+
+      await fetchCredentials();
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    (async () => {
+      setProcessing(true);
+
+      try {
+        await fetchCredentials();
+        setProcessing(false);
+      } catch (error) {
+        setFailed(true);
+        setProcessing(false);
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
+    if (processing === true) setFailed(false);
+  }, [processing]);
+
+  useEffect(() => {
+    if (failed)
+      toast({
+        status: "error",
+        title: "WebAuthN Error",
+        description: "Failed to Authenticate",
+        position: "top",
+      });
+  }, [failed]);
 
   return (
     <Box bg={useColorModeValue("gray.900", "gray.900")} px={4}>
@@ -122,15 +237,26 @@ export default function HeaderNav() {
               <Avatar size={"sm"} src={""} />
             </MenuButton>
             <MenuList>
+              {residentCredentials ? (
+                <MenuItem onClick={remove}>
+                  <Icon as={FingerScan} boxSize="5" />
+                  <Text pl={"2"}>Remove WebAuthN</Text>
+                </MenuItem>
+              ) : (
+                <MenuItem onClick={setUp}>
+                  <Icon as={FingerScan} boxSize="5" />
+                  <Text pl={"2"}>Setup WebAuthN</Text>
+                </MenuItem>
+              )}
               {isLoggedIn ? (
                 <MenuItem color={"red.500"} onClick={logoutHandler}>
-                  <Text pr={"2"}>Logout</Text>
                   <Icon as={Logout} boxSize="5" />
+                  <Text pl={"2"}>Logout</Text>
                 </MenuItem>
               ) : (
                 <MenuItem onClick={() => navigate(appRoutes.SIGN_IN)}>
-                  <Text pr={"2"}>Sign In</Text>
                   <Icon as={LoginCurve} boxSize="5" />
+                  <Text pl={"2"}>Sign In</Text>
                 </MenuItem>
               )}
             </MenuList>

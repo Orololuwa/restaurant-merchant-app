@@ -36,3 +36,23 @@ export interface IProfile {
   updatedAt: string;
   setupComplete: boolean;
 }
+
+export interface IGetResidentKeys {
+  id: number;
+  publicKey: string;
+  credentialId: string;
+}
+
+export interface AttestateEndDTO {
+  rawId: string;
+  attestationObject: string;
+  clientDataJSON: string;
+}
+
+export interface AssertEndRemoveDTO {
+  challenge: string;
+  rawId: string;
+  authenticatorData: string;
+  clientDataJSON: string;
+  signature: string;
+}

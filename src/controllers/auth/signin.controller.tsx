@@ -17,7 +17,7 @@ import { useAppDispatch, useAppSelector } from "core/hooks/use-redux";
 import { AuthLocationState } from "models/auth";
 import { useCallback, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { loginJWT } from "store/action-creators/auth.actions";
+import { loginJWT, loginWebAuthN } from "store/action-creators/auth.actions";
 import { ErrorToast } from "core/components/error";
 import { isFieldsInvalid } from "lib/utils";
 import { appRoutes } from "core/routes/routes";
@@ -44,6 +44,11 @@ export default function LoginPage() {
   const onLogin = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     dispatch(loginJWT(navigate, from, state));
+  };
+
+  const onLoginWebAuth = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    dispatch(loginWebAuthN(navigate, from));
   };
 
   return (
@@ -96,7 +101,7 @@ export default function LoginPage() {
                   <ChakraLink
                     as={Link}
                     to={appRoutes.SIGN_UP}
-                    color={"gray.700"}
+                    color={useColorModeValue("gray.700", "gray.600")}
                     colorScheme="gray"
                   >
                     Create an account
@@ -104,7 +109,7 @@ export default function LoginPage() {
                 </Stack>
                 <Flex justifyContent={"space-between"} gap="2">
                   <Button
-                    bg={"gray.700"}
+                    bg={useColorModeValue("gray.700", "gray.600")}
                     color={"white"}
                     _hover={{
                       bg: "gray.500",
@@ -117,12 +122,15 @@ export default function LoginPage() {
                     Sign in
                   </Button>
                   <Button
-                    bg={"gray.700"}
+                    bg={useColorModeValue("gray.700", "gray.600")}
                     color={"white"}
                     _hover={{
                       bg: "gray.500",
                     }}
                     flexBasis={"3rem"}
+                    onClick={onLoginWebAuth}
+                    isLoading={loading}
+                    isDisabled={isDisabled()}
                   >
                     <Icon as={FingerScan} boxSize={"6"} />
                   </Button>
