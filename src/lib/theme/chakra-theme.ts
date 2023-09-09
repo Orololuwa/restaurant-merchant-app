@@ -1,3 +1,5 @@
+import { extendTheme } from "@chakra-ui/react";
+
 export const colors = {
   primary: {
     100: "#D0D2D8",
@@ -99,3 +101,5 @@ export const colors = {
     900: "#281031",
   },
 };
+
+export const chakraTheme = extendTheme({ colors });

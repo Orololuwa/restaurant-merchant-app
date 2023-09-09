@@ -7,9 +7,9 @@ import Select, {
   ControlProps,
   OptionProps,
   GetOptionValue,
-  PropsValue
+  PropsValue,
 } from "react-select";
-import { colors } from "lib/theme/colors";
+import { colors } from "lib/theme/chakra-theme";
 import { BoxProps } from "@chakra-ui/react";
 
 export interface Option {
@@ -45,7 +45,7 @@ const Dropdown = forwardRef<any, DropdownProps>(
       isDisabled,
       menuStyles = {},
       inputStyles = {},
-      maxMenuHeight = 150
+      maxMenuHeight = 150,
     },
     ref
   ): JSX.Element => {
@@ -54,7 +54,7 @@ const Dropdown = forwardRef<any, DropdownProps>(
         ref={ref}
         className={classNames({
           "inline-block whitespace-nowrap": true,
-          ...(className && { [className]: className })
+          ...(className && { [className]: className }),
         })}
         options={options}
         onChange={onChange}
@@ -75,11 +75,11 @@ const Dropdown = forwardRef<any, DropdownProps>(
 
 const customStyles = ({
   menuStyles,
-  inputStyles
+  inputStyles,
 }: any): StylesConfig<Option, false> => ({
   container: (provided: CSSObjectWithLabel) => ({
     ...provided,
-    margin: 0
+    margin: 0,
   }),
   control: (
     provided: CSSObjectWithLabel,
@@ -89,17 +89,17 @@ const customStyles = ({
     ...inputStyles,
     boxShadow: state.menuIsOpen ? `0 0 0 1px ${colors.primary[200]}` : "",
     ":hover": {
-      borderColor: colors.primary[200]
+      borderColor: colors.primary[200],
     },
     ":focus": {
-      borderColor: colors.primary[200]
+      borderColor: colors.primary[200],
     },
     ":focus-visible": {
-      borderColor: colors.primary[200]
+      borderColor: colors.primary[200],
     },
     ":focus-within": {
-      borderColor: colors.primary[200]
-    }
+      borderColor: colors.primary[200],
+    },
   }),
   option: (
     provided: CSSObjectWithLabel,
@@ -110,19 +110,19 @@ const customStyles = ({
     ...(!state.isSelected && {
       ":hover": {
         backgroundColor: colors.primary[100] + "30",
-        cursor: "pointer"
-      }
-    })
+        cursor: "pointer",
+      },
+    }),
   }),
   menuList: (provided: CSSObjectWithLabel) => ({
     ...provided,
-    marginBottom: "5px"
+    marginBottom: "5px",
   }),
   menu: (provided: CSSObjectWithLabel) => ({
     ...provided,
     ...menuStyles,
-    zIndex: 3
-  })
+    zIndex: 3,
+  }),
 });
 
 export default Dropdown;
