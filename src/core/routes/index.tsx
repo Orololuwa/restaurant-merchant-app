@@ -5,14 +5,12 @@ import { appRoutes } from "./routes";
 
 import DashboardLayout from "core/components/layout/dashboard-layout";
 import SetupCompleteGuard from "core/guards/setup-complete.guard";
-import RestaurantSetup from "controllers/auth/restaurant-setup";
+import RestaurantSetup from "pages/auth/restaurant-setup";
 import IsRestaurantCreatedGuard from "core/guards/is-restaurant-created.guard";
-import RestaurantChoose from "controllers/auth/restaurant-choose";
-const Dashboard = lazy(
-  () => import("controllers/dashboard/dashboard.controller")
-);
-const SignInPage = lazy(() => import("controllers/auth/signin.controller"));
-const SignUpPage = lazy(() => import("controllers/auth/signup.controller"));
+import RestaurantChoose from "pages/auth/restaurant-choose";
+const Dashboard = lazy(() => import("pages/dashboard/dashboard.controller"));
+const SignInPage = lazy(() => import("pages/auth/signin.controller"));
+const SignUpPage = lazy(() => import("pages/auth/signup.controller"));
 
 const routes: RouteObject[] = [
   {

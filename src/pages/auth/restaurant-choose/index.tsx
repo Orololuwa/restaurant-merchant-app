@@ -8,22 +8,27 @@ import {
   useColorModeValue,
   useToast,
   Link as ChakraLink,
+  Button,
 } from "@chakra-ui/react";
 import Dropdown, { Option } from "core/components/dropdown";
 import { Loading } from "core/components/loading";
 import { useAppSelector } from "core/hooks/use-redux";
 import { appRoutes } from "core/routes/routes";
 import { PictureFrame } from "iconsax-react";
-import { useEffect } from "react";
+import { isEmpty } from "lib/utils";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 const RestaurantChoose = () => {
   const { data, loading, error } = useAppSelector(
     (state) => state.restaurant.restaurants
   );
+
   const restaurant = useAppSelector(
     (state) => state.restaurant.restaurant?.data
   );
+
+  const [state, setState] = useState(restaurant?.id);
 
   const options: Option[] = data?.map((it) => ({
     label: (
@@ -42,6 +47,8 @@ const RestaurantChoose = () => {
     ),
     value: it.id,
   }));
+
+  console.log(state, typeof state, isEmpty(state));
 
   // error and loading
   const toast = useToast();
@@ -98,7 +105,20 @@ const RestaurantChoose = () => {
                 </Center>
               ),
             }}
+            onChange={(option) => {
+              setState(option?.value);
+            }}
           />
+          <Box pt="2" />
+          <Button
+            colorScheme="blackAlpha"
+            variant={"solid"}
+            size={"sm"}
+            isDisabled={isEmpty(state)}
+            onClick={() => alert("@continue button clicked")}
+          >
+            Continue
+          </Button>
           <Box pt="5" />
           <ChakraLink
             as={Link}

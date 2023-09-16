@@ -48,7 +48,7 @@ export class ExpirySession {
     ); // create new expiring date.
     let newValue = {
       value,
-      expirationDate: expirationDate.toISOString()
+      expirationDate: expirationDate.toISOString(),
     };
     LocalStorage.set(key, JSON.stringify(newValue)); // add token to local storage.
   };
@@ -65,7 +65,9 @@ export class ExpirySession {
  * @description this value is Empty Check
  */
 
-export const isEmpty = (value: string | number | object): boolean => {
+export const isEmpty = (
+  value: string | number | object | undefined
+): boolean => {
   if (value === null) {
     return true;
   } else if (typeof value !== "number" && value === "") {
