@@ -1,7 +1,12 @@
 import { AxiosResponse } from "axios";
 import { apiRoutes } from "core/routes/routes";
 import { authInstance } from "lib/config/axios.config";
-import { IRestaurant } from "models/restaurants";
+import {
+  IAddress,
+  ICreateRestaurantBody,
+  IEditRestaurantBody,
+  IRestaurant,
+} from "models/restaurants";
 
 class RestaurantService {
   async getRestaurants(): Promise<AxiosResponse<IRestaurant[]>> {
@@ -26,10 +31,12 @@ class RestaurantService {
     });
   }
 
-  async createRestaurant(): Promise<AxiosResponse<{ message: string }>> {
+  async createRestaurant(
+    body: ICreateRestaurantBody
+  ): Promise<AxiosResponse<{ message: string; data: { id: number } }>> {
     return new Promise(async (resolve, reject) => {
       try {
-        const res = await authInstance.post(apiRoutes.RESTAURANT);
+        const res = await authInstance.post(apiRoutes.RESTAURANT, body);
         resolve(res);
       } catch (error) {
         reject(error);
@@ -38,11 +45,46 @@ class RestaurantService {
   }
 
   async editRestaurant(
-    id: number
-  ): Promise<AxiosResponse<{ message: string }>> {
+    id: number,
+    body: IEditRestaurantBody
+  ): Promise<AxiosResponse<{ message: string; data: { id: number } }>> {
     return new Promise(async (resolve, reject) => {
       try {
-        const res = await authInstance.patch(`${apiRoutes.RESTAURANT}/${id}`);
+        const res = await authInstance.patch(
+          `${apiRoutes.RESTAURANT}/${id}`,
+          body
+        );
+        resolve(res);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
+
+  async createAddress(
+    id: number,
+    body: IAddress
+  ): Promise<AxiosResponse<{ message: string; data: { id: number } }>> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const res = await authInstance.post(`${apiRoutes.ADDRESS}/${id}`, body);
+        resolve(res);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
+
+  async editAddress(
+    id: number,
+    body: Partial<IAddress>
+  ): Promise<AxiosResponse<{ message: string; data: { id: number } }>> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const res = await authInstance.patch(
+          `${apiRoutes.ADDRESS}/${id}`,
+          body
+        );
         resolve(res);
       } catch (error) {
         reject(error);

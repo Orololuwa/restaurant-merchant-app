@@ -12,14 +12,18 @@ import {
 } from "@chakra-ui/react";
 import Dropdown, { Option } from "core/components/dropdown";
 import { Loading } from "core/components/loading";
-import { useAppSelector } from "core/hooks/use-redux";
+import { useAppDispatch, useAppSelector } from "core/hooks/use-redux";
 import { appRoutes } from "core/routes/routes";
 import { PictureFrame } from "iconsax-react";
-import { isEmpty } from "lib/utils";
+import { LocalStorage, isEmpty } from "lib/utils";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { getARestaurant } from "store/action-creators/restaurant.action";
 
 const RestaurantChoose = () => {
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
   const { data, loading, error } = useAppSelector(
     (state) => state.restaurant.restaurants
   );
@@ -48,8 +52,6 @@ const RestaurantChoose = () => {
     value: it.id,
   }));
 
-  console.log(state, typeof state, isEmpty(state));
-
   // error and loading
   const toast = useToast();
 
@@ -61,6 +63,13 @@ const RestaurantChoose = () => {
         position: "top",
       });
   }, [error]);
+
+  const onContinue = async () => {
+    if (isEmpty(state)) return;
+    LocalStorage.set("selectedRestaurant", state);
+    await dispatch(getARestaurant(state as number));
+    navigate("/dashboard");
+  };
 
   if (loading) return <Loading />;
 
@@ -115,7 +124,7 @@ const RestaurantChoose = () => {
             variant={"solid"}
             size={"sm"}
             isDisabled={isEmpty(state)}
-            onClick={() => alert("@continue button clicked")}
+            onClick={onContinue}
           >
             Continue
           </Button>

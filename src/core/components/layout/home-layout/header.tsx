@@ -23,10 +23,17 @@ import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { ColorModeSwitcher } from "core/components/color-mode-switcher";
 import { Link, useMatch, useNavigate, useResolvedPath } from "react-router-dom";
 import { appRoutes } from "core/routes/routes";
-import { FingerScan, LoginCurve, Logout } from "iconsax-react";
+import {
+  Add,
+  ArrowSwapHorizontal,
+  Edit,
+  FingerScan,
+  LoginCurve,
+  Logout,
+} from "iconsax-react";
 import { useLogout } from "core/hooks/use-logout";
 import logo from "assets/logo.png";
-import { useAppSelector } from "core/hooks/use-redux";
+import { useAppDispatch, useAppSelector } from "core/hooks/use-redux";
 import authService from "services/auth.service";
 import { decode } from "base64-arraybuffer";
 import {
@@ -35,6 +42,8 @@ import {
   encodeAssertResponse,
   encodeAttestationResponse,
 } from "lib/helpers/web-auth-n.helper";
+import { LocalStorage } from "lib/utils";
+import { resetARestaurant } from "store/action-creators/restaurant.action";
 
 const Links = [
   {
@@ -86,6 +95,8 @@ export default function HeaderNav() {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const navigate = useNavigate();
+
+  const dispatch = useAppDispatch();
 
   const { logoutHandler } = useLogout();
 
@@ -190,6 +201,21 @@ export default function HeaderNav() {
       });
   }, [failed]);
 
+  //
+  const switchRestaurant = () => {
+    navigate(appRoutes.RESTAURANT_CHOOSE);
+  };
+
+  const editRestaurant = () => {
+    navigate(appRoutes.RESTAURANT_SETUP);
+  };
+
+  const addRestaurant = () => {
+    LocalStorage.remove("selectedRestaurant");
+    dispatch(resetARestaurant());
+    navigate(appRoutes.RESTAURANT_SETUP);
+  };
+
   return (
     <Box bg={useColorModeValue("gray.900", "gray.900")} px={4}>
       <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
@@ -237,6 +263,18 @@ export default function HeaderNav() {
               <Avatar size={"sm"} src={""} />
             </MenuButton>
             <MenuList>
+              <MenuItem onClick={switchRestaurant}>
+                <Icon as={ArrowSwapHorizontal} boxSize="5" />
+                <Text pl={"2"}>Switch Restaurant</Text>
+              </MenuItem>
+              <MenuItem onClick={editRestaurant}>
+                <Icon as={Edit} boxSize="5" />
+                <Text pl={"2"}>Edit Restaurant</Text>
+              </MenuItem>
+              <MenuItem onClick={addRestaurant}>
+                <Icon as={Add} boxSize="5" />
+                <Text pl={"2"}>Add Restaurant</Text>
+              </MenuItem>
               {residentCredentials ? (
                 <MenuItem onClick={remove}>
                   <Icon as={FingerScan} boxSize="5" />

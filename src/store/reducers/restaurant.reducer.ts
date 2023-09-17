@@ -44,6 +44,11 @@ export const RestaurantSlice = createSlice({
       state.restaurant.loading = false;
       state.restaurant.error = action.payload;
     },
+    resetARestaurant: (state) => {
+      state.restaurant.loading = false;
+      state.restaurant.error = "";
+      state.restaurant.data = null;
+    },
   },
 });
 

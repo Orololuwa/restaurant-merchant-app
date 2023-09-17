@@ -32,3 +32,9 @@ export const getARestaurant = (id: number) => {
     }
   };
 };
+
+export const resetARestaurant = () => {
+  return (dispatch: Dispatch) => {
+    dispatch(actions.resetARestaurant());
+  };
+};

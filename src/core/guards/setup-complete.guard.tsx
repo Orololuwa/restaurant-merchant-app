@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { Navigate } from "react-router-dom";
 
 const SetupCompleteGuard = ({ children }: { children: JSX.Element }) => {
-  const data = useAppSelector((state) => state.auth.profile);
+  const data = useAppSelector((state) => state.restaurant.restaurant);
   const toast = useToast();
 
   useEffect(() => {
@@ -18,7 +18,7 @@ const SetupCompleteGuard = ({ children }: { children: JSX.Element }) => {
       });
   }, [data.error]);
 
-  const setupComplete = data.data?.setupComplete;
+  const setupComplete = data?.data?.setupComplete;
 
   if (data.loading) return <Loading />;
 

@@ -16,6 +16,7 @@ export const apiRoutes = {
   SIGN_UP: `${pre}/auth/register`,
   PROFILE: `${pre}/profile`,
   RESTAURANT: `${pre}/restaurant`,
+  ADDRESS: `${pre}/restaurant/address`,
   GET_RESIDENT_KEYS: `${pre}/webauthn/resident`,
   ATTESTATE_BEGIN: `${pre}/webauthn/resident/attestate/begin`,
   ATTESTATE_END: `${pre}/webauthn/resident/attestate/end`,

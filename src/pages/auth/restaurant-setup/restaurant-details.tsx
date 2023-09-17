@@ -10,18 +10,29 @@ import {
   Stack,
   Skeleton,
   SkeletonCircle,
+  Button,
+  useToast,
 } from "@chakra-ui/react";
 
 import Upload from "core/components/upload/upload";
 import { useAppDispatch, useAppSelector } from "core/hooks/use-redux";
 import { getARestaurant } from "store/action-creators/restaurant.action";
+import { LocalStorage, isFieldsInvalid } from "lib/utils";
+import { AxiosError } from "axios";
+import restaurantsService from "services/restaurants.service";
 
-const RestaurantDetails = () => {
-  const restaurantId = 6;
+interface Props {
+  onNext: () => void;
+}
+
+const RestaurantDetails = (props: Props) => {
+  const { onNext } = props;
+  const restaurantId = LocalStorage.get("selectedRestaurant");
 
   const dispatch = useAppDispatch();
 
   useEffect(() => {
+    if (!restaurantId) return;
     dispatch(getARestaurant(restaurantId));
   }, []);
 
@@ -59,6 +70,44 @@ const RestaurantDetails = () => {
     setState((prevState) => ({ ...prevState, logo: image }));
   };
 
+  //
+  const [isLoading, setLoading] = useState(false);
+  const toast = useToast();
+
+  const onSubmit = async () => {
+    setLoading(true);
+    try {
+      const {
+        data: {
+          data: { id },
+          message,
+        },
+      } = restaurantId
+        ? await restaurantsService.editRestaurant(restaurantId, state)
+        : await restaurantsService.createRestaurant(state);
+      LocalStorage.set("selectedRestaurant", id);
+      await dispatch(getARestaurant(id));
+      toast({
+        description: message,
+        status: "success",
+        position: "top",
+        variant: "subtle",
+      });
+      setLoading(false);
+      onNext();
+    } catch (error) {
+      const axiosError = error as AxiosError<{ message: string }>;
+      const msg = axiosError.response?.data?.message;
+      toast({
+        description: msg,
+        status: "error",
+        position: "top",
+        variant: "subtle",
+      });
+      setLoading(false);
+    }
+  };
+
   if (loading) {
     return (
       <Stack spacing={"10"}>
@@ -82,11 +131,11 @@ const RestaurantDetails = () => {
   return (
     <>
       <Heading w="100%" textAlign={"center"} fontWeight="normal" mb="2%">
-        User Registration
+        Restaurant Details
       </Heading>
       <FormControl mt="2%">
         <FormLabel htmlFor="name" fontWeight={"normal"}>
-          Restaurant Name
+          Name
         </FormLabel>
         <Input
           id="name"
@@ -128,6 +177,17 @@ const RestaurantDetails = () => {
           onCurrentImageChange={onImageChangeHandler}
         />
       </Box>
+      <Flex justifyContent={"flex-end"}>
+        <Button
+          w="7rem"
+          onClick={onSubmit}
+          variant="outline"
+          isDisabled={isFieldsInvalid(state)}
+          isLoading={isLoading}
+        >
+          Next
+        </Button>
+      </Flex>
     </>
   );
 };
